@@ -14,7 +14,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
-import type { Booking } from '@/lib/mockData';
+import { formatINR, type Booking } from '@/lib/mockData';
 
 import heroImage from '@assets/generated_images/cricket_ground_hero_image.png';
 import nightImage from '@assets/generated_images/night_cricket_ground.png';
@@ -101,7 +101,7 @@ export default function BookingCard({ booking, onCancel }: BookingCardProps) {
             <div className="flex flex-wrap items-center justify-between gap-4 border-t pt-4">
               <div>
                 <span className="text-2xl font-bold" data-testid={`text-booking-price-${booking.id}`}>
-                  ${booking.totalPrice}
+                  {formatINR(booking.totalPrice)}
                 </span>
                 <span className="text-sm text-muted-foreground"> total</span>
               </div>

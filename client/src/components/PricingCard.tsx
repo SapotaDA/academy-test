@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { formatINR } from '@/lib/mockData';
 
 interface PricingCardProps {
   name: string;
@@ -30,7 +31,7 @@ export default function PricingCard({ name, description, pricePerHour, features,
       </CardHeader>
       <CardContent className="space-y-6">
         <div>
-          <span className="text-4xl font-bold">${pricePerHour}</span>
+          <span className="text-4xl font-bold">{formatINR(pricePerHour)}</span>
           <span className="text-muted-foreground">/hour</span>
         </div>
         

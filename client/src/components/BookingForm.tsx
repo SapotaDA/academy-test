@@ -29,7 +29,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { cn } from '@/lib/utils';
-import { grounds, timeSlots, saveBooking, type Ground, type TimeSlot } from '@/lib/mockData';
+import { grounds, timeSlots, saveBooking, formatINR, type Ground, type TimeSlot } from '@/lib/mockData';
 import { useToast } from '@/hooks/use-toast';
 
 import heroImage from '@assets/generated_images/cricket_ground_hero_image.png';
@@ -155,7 +155,7 @@ export default function BookingForm({ initialGroundId, onSuccess }: BookingFormP
                         <SelectContent>
                           {grounds.map(ground => (
                             <SelectItem key={ground.id} value={ground.id}>
-                              {ground.name} - ${ground.pricePerHour}/hr
+                              {ground.name} - {formatINR(ground.pricePerHour)}/hr
                             </SelectItem>
                           ))}
                         </SelectContent>
@@ -359,7 +359,7 @@ export default function BookingForm({ initialGroundId, onSuccess }: BookingFormP
                 <div className="border-t pt-4">
                   <div className="flex justify-between text-lg font-semibold">
                     <span>Total</span>
-                    <span data-testid="text-total-price">${totalPrice}</span>
+                    <span data-testid="text-total-price">{formatINR(totalPrice)}</span>
                   </div>
                 </div>
               </>

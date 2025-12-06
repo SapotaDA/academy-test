@@ -40,7 +40,7 @@ export const grounds: Ground[] = [
   {
     id: '1',
     name: 'Premier Cricket Arena',
-    location: 'Central Stadium, Downtown',
+    location: 'Nehru Stadium, Mumbai',
     image: 'hero',
     rating: 4.9,
     reviewCount: 128,
@@ -52,7 +52,7 @@ export const grounds: Ground[] = [
   {
     id: '2',
     name: 'Nightfall Cricket Ground',
-    location: 'Sports Complex, East Side',
+    location: 'Sports Complex, Andheri',
     image: 'night',
     rating: 4.7,
     reviewCount: 95,
@@ -64,7 +64,7 @@ export const grounds: Ground[] = [
   {
     id: '3',
     name: 'Green Valley Cricket Club',
-    location: 'Valley Park, Suburbs',
+    location: 'Powai, Mumbai',
     image: 'premium',
     rating: 4.8,
     reviewCount: 156,
@@ -76,7 +76,7 @@ export const grounds: Ground[] = [
   {
     id: '4',
     name: 'Indoor Cricket Nets',
-    location: 'Sports Hub, City Center',
+    location: 'BKC Sports Hub, Mumbai',
     image: 'indoor',
     rating: 4.5,
     reviewCount: 72,
@@ -87,7 +87,7 @@ export const grounds: Ground[] = [
   {
     id: '5',
     name: 'Community Sports Ground',
-    location: 'Riverside Park',
+    location: 'Juhu, Mumbai',
     image: 'community',
     rating: 4.4,
     reviewCount: 48,
@@ -98,7 +98,7 @@ export const grounds: Ground[] = [
   {
     id: '6',
     name: 'Elite Cricket Stadium',
-    location: 'Olympic Complex',
+    location: 'Wankhede Complex, Mumbai',
     image: 'luxury',
     rating: 5.0,
     reviewCount: 203,
@@ -166,6 +166,15 @@ export const pricingTiers = [
     ],
   },
 ];
+
+// Format price in Indian Rupee format (e.g., ₹2,500)
+export function formatINR(amount: number): string {
+  return new Intl.NumberFormat('en-IN', {
+    style: 'currency',
+    currency: 'INR',
+    maximumFractionDigits: 0,
+  }).format(amount);
+}
 
 // Helper function to get bookings from localStorage
 export function getBookings(): Booking[] {

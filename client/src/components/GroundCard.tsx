@@ -4,7 +4,7 @@ import { MapPin, Star, Users, Lightbulb, Car, Coffee, Shirt } from 'lucide-react
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import type { Ground } from '@/lib/mockData';
+import { formatINR, type Ground } from '@/lib/mockData';
 
 import heroImage from '@assets/generated_images/cricket_ground_hero_image.png';
 import nightImage from '@assets/generated_images/night_cricket_ground.png';
@@ -110,7 +110,7 @@ export default function GroundCard({ ground }: GroundCardProps) {
         <div className="flex items-center justify-between gap-4 pt-2">
           <div>
             <span className="text-2xl font-bold" data-testid={`text-ground-price-${ground.id}`}>
-              ${ground.pricePerHour}
+              {formatINR(ground.pricePerHour)}
             </span>
             <span className="text-sm text-muted-foreground">/hour</span>
           </div>
