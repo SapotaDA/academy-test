@@ -1,5 +1,6 @@
 import { Check } from 'lucide-react';
 import { Link } from 'wouter';
+import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -35,21 +36,37 @@ export default function PricingCard({ name, description, pricePerHour, features,
         
         <ul className="space-y-3">
           {features.map((feature, index) => (
-            <li key={index} className="flex items-start gap-2 text-sm">
-              <Check className="h-5 w-5 shrink-0 text-primary" />
+            <motion.li 
+              key={index} 
+              className="flex items-start gap-2 text-sm"
+              initial={{ opacity: 0, x: -10 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ delay: index * 0.05 }}
+              viewport={{ once: true }}
+            >
+              <motion.div
+                initial={{ scale: 0 }}
+                whileInView={{ scale: 1 }}
+                transition={{ delay: index * 0.05 + 0.1, type: "spring" }}
+                viewport={{ once: true }}
+              >
+                <Check className="h-5 w-5 shrink-0 text-primary" />
+              </motion.div>
               <span>{feature}</span>
-            </li>
+            </motion.li>
           ))}
         </ul>
 
         <Link href="/booking">
-          <Button 
-            className="w-full" 
-            variant={popular ? 'default' : 'outline'}
-            data-testid={`button-select-${name.toLowerCase()}`}
-          >
-            Select {name}
-          </Button>
+          <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+            <Button 
+              className="w-full" 
+              variant={popular ? 'default' : 'outline'}
+              data-testid={`button-select-${name.toLowerCase()}`}
+            >
+              Select {name}
+            </Button>
+          </motion.div>
         </Link>
       </CardContent>
     </Card>

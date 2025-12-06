@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'wouter';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, User, LogOut, CalendarDays } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
@@ -35,9 +36,13 @@ export default function Navbar({ user, onLogout }: NavbarProps) {
       <div className="mx-auto max-w-7xl px-4 md:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between gap-4">
           <Link href="/" className="flex items-center gap-2">
-            <div className="flex h-9 w-9 items-center justify-center rounded-md bg-primary">
+            <motion.div 
+              className="flex h-9 w-9 items-center justify-center rounded-md bg-primary"
+              whileHover={{ rotate: 10, scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
               <CalendarDays className="h-5 w-5 text-primary-foreground" />
-            </div>
+            </motion.div>
             <span className="text-xl font-bold" data-testid="text-logo">CricketBook</span>
           </Link>
 
@@ -108,24 +113,39 @@ export default function Navbar({ user, onLogout }: NavbarProps) {
           </div>
         </div>
 
-        {mobileMenuOpen && (
-          <div className="border-t py-4 md:hidden">
-            <div className="flex flex-col gap-2">
-              {navLinks.map(link => (
-                <Link key={link.href} href={link.href}>
-                  <Button
-                    variant={isActive(link.href) ? 'secondary' : 'ghost'}
-                    className="w-full justify-start"
-                    onClick={() => setMobileMenuOpen(false)}
-                    data-testid={`link-mobile-${link.label.toLowerCase().replace(' ', '-')}`}
+        <AnimatePresence>
+          {mobileMenuOpen && (
+            <motion.div 
+              className="border-t py-4 md:hidden"
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.2 }}
+            >
+              <div className="flex flex-col gap-2">
+                {navLinks.map((link, index) => (
+                  <motion.div
+                    key={link.href}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: index * 0.05 }}
                   >
-                    {link.label}
-                  </Button>
-                </Link>
-              ))}
-            </div>
-          </div>
-        )}
+                    <Link href={link.href}>
+                      <Button
+                        variant={isActive(link.href) ? 'secondary' : 'ghost'}
+                        className="w-full justify-start"
+                        onClick={() => setMobileMenuOpen(false)}
+                        data-testid={`link-mobile-${link.label.toLowerCase().replace(' ', '-')}`}
+                      >
+                        {link.label}
+                      </Button>
+                    </Link>
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </nav>
   );
