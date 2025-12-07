@@ -366,6 +366,72 @@ export default function HomePage() {
             </motion.div>
           </ScaleIn>
         </div>
+
+        {/* Contact Section */}
+        <div className="space-y-8 py-20">
+          <StaggerContainer>
+            <StaggerItem>
+              <FadeIn className="text-center">
+                <h2 className="text-3xl font-bold tracking-tighter md:text-4xl">Get in Touch</h2>
+                <p className="mt-2 text-lg text-muted-foreground">
+                  Have questions? We'd love to hear from you!
+                </p>
+              </FadeIn>
+            </StaggerItem>
+
+            <div className="grid gap-6 md:grid-cols-2">
+              <StaggerItem>
+                <Card>
+                  <CardContent className="p-6">
+                    <div className="flex items-start gap-4">
+                      <div className="rounded-lg bg-primary/10 p-3">
+                        <MapPin className="h-6 w-6 text-primary" />
+                      </div>
+                      <div>
+                        <h3 className="font-semibold">Visit Us</h3>
+                        <p className="mt-2 text-sm text-muted-foreground">
+                          Check our location and directions on Google Maps
+                        </p>
+                        <a
+                          href="https://maps.app.goo.gl/X1hJhD5fKvkv92Np9"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="mt-3 inline-flex items-center text-primary hover:underline"
+                        >
+                          View on Maps <ArrowRight className="ml-2 h-4 w-4" />
+                        </a>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </StaggerItem>
+
+              <StaggerItem>
+                <Card>
+                  <CardContent className="p-6">
+                    <div className="flex items-start gap-4">
+                      <div className="rounded-lg bg-primary/10 p-3">
+                        <Phone className="h-6 w-6 text-primary" />
+                      </div>
+                      <div>
+                        <h3 className="font-semibold">Call Us</h3>
+                        <p className="mt-2 text-sm text-muted-foreground">
+                          Reach out for more details about our grounds and services
+                        </p>
+                        <a
+                          href="tel:+918287704299"
+                          className="mt-3 inline-flex items-center text-primary hover:underline font-medium"
+                        >
+                          +91 82877 04299
+                        </a>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </StaggerItem>
+            </div>
+          </StaggerContainer>
+        </div>
       </section>
     </div>
   );
