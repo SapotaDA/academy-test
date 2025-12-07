@@ -1,6 +1,6 @@
 import { Link } from 'wouter';
 import { motion } from 'framer-motion';
-import { ArrowRight, Calendar, Users, Shield, Clock, Star, ChevronRight, Sparkles } from 'lucide-react';
+import { ArrowRight, Calendar, Users, Shield, Clock, Star, ChevronRight, Sparkles, MapPin, Phone } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
