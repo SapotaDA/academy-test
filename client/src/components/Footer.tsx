@@ -47,11 +47,23 @@ export default function Footer() {
             <div className="flex flex-col gap-3 text-sm text-muted-foreground">
               <div className="flex items-center gap-2">
                 <MapPin className="h-4 w-4 shrink-0" />
-                <span>123 Sports Avenue, Mumbai</span>
+                <a 
+                  href="https://maps.app.goo.gl/X1hJhD5fKvkv92Np9" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="hover:text-foreground hover:underline"
+                >
+                  View Location on Google Maps
+                </a>
               </div>
               <div className="flex items-center gap-2">
                 <Phone className="h-4 w-4 shrink-0" />
-                <span>+91 98765 43210</span>
+                <a 
+                  href="tel:+918287704299"
+                  className="hover:text-foreground hover:underline"
+                >
+                  +91 82877 04299
+                </a>
               </div>
               <div className="flex items-center gap-2">
                 <Mail className="h-4 w-4 shrink-0" />
