@@ -215,7 +215,7 @@ export default function HomePage() {
                 <StaggerItem key={idx}>
                   <motion.div whileHover={{ y: -6 }} transition={{ duration: 0.18 }}>
                     <div className="group">
-                      <Card className="overflow-hidden transition-shadow duration-200 group-hover:shadow-lg group-hover:scale-[1.01] border border-transparent group-hover:border-primary/60 group-hover:ring-1 group-hover:ring-primary/20">
+                      <Card className="overflow-hidden transition duration-200 ease-out group-hover:shadow-2xl group-hover:scale-105 border border-transparent group-hover:border-primary/80 group-hover:ring-2 group-hover:ring-primary/50">
                         <div className="overflow-hidden">
                           <img src={imgSrc} alt={ground?.name ?? 'Ground image'} className="h-44 w-full object-cover object-center" />
                         </div>
