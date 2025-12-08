@@ -1,4 +1,4 @@
-import type { Express } from "express";
+import express, { type Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 
@@ -145,6 +145,7 @@ export async function registerRoutes(
     try {
       const year = parseInt(String(req.query.year || ''), 10);
       const month = parseInt(String(req.query.month || ''), 10); // 0-indexed expected
+      const groundId = String(req.query.groundId || '');
       if (Number.isNaN(year) || Number.isNaN(month)) return res.status(400).json({ message: 'year and month query params required' });
 
       const result = { availableDates: [] as string[], partialDates: [] as string[], fullDates: [] as string[] };
@@ -156,7 +157,14 @@ export async function registerRoutes(
         const dt = new Date(year, month, d);
         const iso = dt.toISOString().slice(0,10);
         const rec = bookingsStore.get(iso);
-        const booked = rec?.bookedSlots ?? 0;
+        let booked = 0;
+        if (rec) {
+          if (groundId) {
+            booked = rec.bookings.filter((b: any) => String(b.groundId) === String(groundId)).length;
+          } else {
+            booked = rec.bookedSlots ?? 0;
+          }
+        }
         if (booked === 0) result.availableDates.push(iso);
         else if (booked >= TOTAL_SLOTS) result.fullDates.push(iso);
         else result.partialDates.push(iso);
