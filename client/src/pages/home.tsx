@@ -17,7 +17,7 @@ const testimonials = [
     id: 1,
     name: 'Rahul Sharma',
     role: 'Team Captain',
-    content: 'CricketBook made organizing our weekend matches so easy. The booking process is seamless and the grounds are always well-maintained.',
+    content: 'Sidh Cricket Academy made organizing our weekend matches so easy. The booking process is seamless and the grounds are always well-maintained.',
     rating: 5,
     bookings: 24,
   },
@@ -25,7 +25,7 @@ const testimonials = [
     id: 2,
     name: 'Priya Patel',
     role: 'Sports Coordinator',
-    content: 'We use CricketBook for all our corporate cricket events. The variety of grounds and flexible time slots work perfectly for our needs.',
+    content: 'We use Sidh Cricket Academy for all our corporate cricket events. The variety of grounds and flexible time slots work perfectly for our needs.',
     rating: 5,
     bookings: 18,
   },
@@ -113,7 +113,7 @@ export default function HomePage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.4 }}
             >
-              Premium cricket facilities at your fingertips. Easy online booking, flexible time slots, and top-quality grounds for your matches.
+              Sidh Cricket Academy offers premium cricket facilities and expert training. Easy online ground booking, flexible schedules, and top-quality venues for your matches.
             </motion.p>
             
             <motion.div 
@@ -347,7 +347,7 @@ export default function HomePage() {
                   </motion.div>
                   <h2 className="text-2xl font-semibold md:text-3xl">Ready to Play?</h2>
                   <p className="max-w-xl text-primary-foreground/80">
-                    Join thousands of cricket enthusiasts who trust CricketBook for their ground booking needs.
+                    Join thousands of cricket enthusiasts who trust Sidh Cricket Academy for their ground booking and training needs.
                   </p>
                   <Link href="/booking">
                     <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }}>
