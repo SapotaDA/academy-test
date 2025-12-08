@@ -10,6 +10,11 @@ import { FadeIn, FadeInLeft, StaggerContainer, StaggerItem, ScaleIn } from '@/co
 import { grounds, pricingTiers } from '@/lib/mockData';
 
 import heroImage from '@assets/generated_images/cricket_ground_hero_image.png';
+import nightImage from '@assets/generated_images/night_cricket_ground.png';
+import premiumImage from '@assets/generated_images/premium_cricket_ground.png';
+import indoorImage from '@assets/generated_images/indoor_cricket_nets.png';
+import communityImage from '@assets/generated_images/community_cricket_ground.png';
+import luxuryImage from '@assets/generated_images/luxury_cricket_stadium.png';
 
 // todo: remove mock functionality
 const testimonials = [
@@ -188,90 +193,80 @@ export default function HomePage() {
               Book your perfect cricket venue with flexible options
             </p>
           </FadeIn>
-          
+
+          {/* image mapping for mock data keys */}
+          {/* use featuredGrounds[0] and [1] images if available */}
           <StaggerContainer className="grid gap-6 md:grid-cols-2">
-            <StaggerItem>
-              <motion.div whileHover={{ y: -5 }} transition={{ duration: 0.2 }}>
-                <Card className="overflow-hidden border-2 hover:border-primary/50 transition-colors">
-                  <CardContent className="p-8 space-y-6">
-                    <div>
-                      <h3 className="text-2xl font-bold mb-2">25 Overs Each Side</h3>
-                      <p className="text-muted-foreground">Ideal for short-format matches.</p>
-                    </div>
-                    
-                    <div className="space-y-2">
-                      <p className="text-sm text-muted-foreground">Cost</p>
-                      <p className="text-3xl font-bold text-primary">₹— to ₹7,000</p>
-                    </div>
+            {([0, 1] as const).map((idx) => {
+              const ground = featuredGrounds[idx];
+              // fallback images
+              const imageMap: Record<string, string> = {
+                hero: heroImage,
+                night: nightImage,
+                premium: premiumImage,
+                indoor: indoorImage,
+                community: communityImage,
+                luxury: luxuryImage,
+              };
+              const imgSrc = ground ? imageMap[ground.image] ?? heroImage : heroImage;
+              const isFullDay = idx === 1;
 
-                    <div className="space-y-3 border-t pt-6">
-                      <p className="font-semibold text-sm">Add-ons</p>
-                      <ul className="space-y-2">
-                        <li className="flex items-start gap-2 text-sm">
-                          <span className="text-primary mt-1">✓</span>
-                          <span>Umpire available at additional charges</span>
-                        </li>
-                        <li className="flex items-start gap-2 text-sm">
-                          <span className="text-primary mt-1">✓</span>
-                          <span>Scorer available at additional charges</span>
-                        </li>
-                      </ul>
-                    </div>
+              return (
+                <StaggerItem key={idx}>
+                  <motion.div whileHover={{ y: -6 }} transition={{ duration: 0.18 }}>
+                    <div className="group">
+                      <Card className="overflow-hidden transition-shadow duration-200 group-hover:shadow-lg group-hover:scale-[1.01] border border-transparent group-hover:border-primary/60 group-hover:ring-1 group-hover:ring-primary/20">
+                        <div className="overflow-hidden">
+                          <img src={imgSrc} alt={ground?.name ?? 'Ground image'} className="h-44 w-full object-cover object-center" />
+                        </div>
+                        <CardContent className="p-6 space-y-4">
+                          <div className="flex items-start justify-between gap-4">
+                            <div>
+                              <h3 className="text-xl font-semibold">
+                                {isFullDay ? 'Full Day Booking' : '25 Overs Each Side'}
+                              </h3>
+                              <p className="text-sm text-muted-foreground mt-1">
+                                {isFullDay ? 'Perfect for tournaments or full-day events.' : 'Ideal for short-format matches.'}
+                              </p>
+                            </div>
+                            {isFullDay && (
+                              <span className="inline-block rounded-full bg-primary text-primary-foreground px-3 py-1 text-xs font-semibold">Most Popular</span>
+                            )}
+                          </div>
 
-                    <Link href="/booking">
-                      <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                        <Button className="w-full gap-2" data-testid="button-book-25overs">
-                          Book Now <ArrowRight className="h-4 w-4" />
-                        </Button>
-                      </motion.div>
-                    </Link>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            </StaggerItem>
+                          <div>
+                            <p className="text-sm text-muted-foreground">Cost</p>
+                            <p className="text-2xl font-bold text-primary">{isFullDay ? '₹15,000' : '₹— to ₹7,000'}</p>
+                          </div>
 
-            <StaggerItem>
-              <motion.div whileHover={{ y: -5 }} transition={{ duration: 0.2 }}>
-                <Card className="overflow-hidden border-2 border-primary hover:border-primary transition-colors bg-primary/5">
-                  <CardContent className="p-8 space-y-6">
-                    <div>
-                      <div className="inline-block mb-3">
-                        <span className="bg-primary text-primary-foreground px-3 py-1 rounded-full text-xs font-semibold">Most Popular</span>
-                      </div>
-                      <h3 className="text-2xl font-bold mb-2">Full Day Booking</h3>
-                      <p className="text-muted-foreground">Perfect for tournaments or full-day events.</p>
-                    </div>
-                    
-                    <div className="space-y-2">
-                      <p className="text-sm text-muted-foreground">Cost</p>
-                      <p className="text-3xl font-bold text-primary">₹15,000</p>
-                    </div>
+                          <div className="pt-4 border-t">
+                            <p className="font-semibold text-sm">Add-ons</p>
+                            <ul className="mt-3 space-y-2 text-sm">
+                              <li className="flex items-start gap-2">
+                                <span className="text-primary mt-1">✓</span>
+                                <span>{isFullDay ? 'Umpire - Charged extra' : 'Umpire available at additional charges'}</span>
+                              </li>
+                              <li className="flex items-start gap-2">
+                                <span className="text-primary mt-1">✓</span>
+                                <span>{isFullDay ? 'Scorer - Charged extra' : 'Scorer available at additional charges'}</span>
+                              </li>
+                            </ul>
+                          </div>
 
-                    <div className="space-y-3 border-t pt-6">
-                      <p className="font-semibold text-sm">Add-ons</p>
-                      <ul className="space-y-2">
-                        <li className="flex items-start gap-2 text-sm">
-                          <span className="text-primary mt-1">✓</span>
-                          <span>Umpire - Charged extra</span>
-                        </li>
-                        <li className="flex items-start gap-2 text-sm">
-                          <span className="text-primary mt-1">✓</span>
-                          <span>Scorer - Charged extra</span>
-                        </li>
-                      </ul>
+                          <Link href="/booking">
+                            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                              <Button className="w-full mt-2" data-testid={isFullDay ? 'button-book-fullday' : 'button-book-25overs'}>
+                                Book Now <ArrowRight className="h-4 w-4" />
+                              </Button>
+                            </motion.div>
+                          </Link>
+                        </CardContent>
+                      </Card>
                     </div>
-
-                    <Link href="/booking">
-                      <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                        <Button className="w-full gap-2" data-testid="button-book-fullday">
-                          Book Now <ArrowRight className="h-4 w-4" />
-                        </Button>
-                      </motion.div>
-                    </Link>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            </StaggerItem>
+                  </motion.div>
+                </StaggerItem>
+              );
+            })}
           </StaggerContainer>
         </div>
       </section>
