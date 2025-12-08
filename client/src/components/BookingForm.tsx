@@ -62,9 +62,10 @@ type BookingFormValues = z.infer<typeof bookingSchema>;
 interface BookingFormProps {
   initialGroundId?: string;
   onSuccess?: () => void;
+  selectedDateISO?: string | null;
 }
 
-export default function BookingForm({ initialGroundId, onSuccess }: BookingFormProps) {
+export default function BookingForm({ initialGroundId, onSuccess, selectedDateISO = null }: BookingFormProps) {
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [selectedGround, setSelectedGround] = useState<Ground | null>(null);
@@ -88,6 +89,20 @@ export default function BookingForm({ initialGroundId, onSuccess }: BookingFormP
     const ground = grounds.find(g => g.id === watchedGroundId);
     setSelectedGround(ground || null);
   }, [watchedGroundId]);
+
+  // If a selected date ISO is provided externally, set the form date
+  useEffect(() => {
+    if (selectedDateISO) {
+      try {
+        const d = new Date(selectedDateISO);
+        if (!isNaN(d.getTime())) {
+          form.setValue('date', d);
+        }
+      } catch (e) {
+        // ignore invalid date
+      }
+    }
+  }, [selectedDateISO]);
 
   const selectedTimeSlot = timeSlots.find(t => t.id === watchedTimeSlotId);
   const totalPrice = selectedGround ? selectedGround.pricePerHour * 2 : 0;
