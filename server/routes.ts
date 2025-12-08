@@ -12,6 +12,25 @@ export async function registerRoutes(
   // use storage to perform CRUD operations on the storage interface
   // e.g. storage.insertUser(user) or storage.getUserByUsername(username)
 
+  // Newsletter subscription endpoint
+  app.post('/api/newsletter', (req, res) => {
+    try {
+      const { email } = req.body;
+      if (!email || typeof email !== 'string' || !email.trim()) {
+        return res.status(400).json({ message: 'Email is required' });
+      }
+      const emailRegex = /^\S+@\S+\.\S+$/;
+      if (!emailRegex.test(email.trim())) {
+        return res.status(400).json({ message: 'Invalid email format' });
+      }
+      // Log subscription (in a real app, persist to database)
+      console.log(`Newsletter subscription: ${email.trim()}`);
+      return res.json({ message: 'Successfully subscribed to newsletter', email: email.trim() });
+    } catch (err: any) {
+      return res.status(500).json({ message: err?.message || String(err) });
+    }
+  });
+
   // Proxy endpoint to fetch Google Places reviews. Accepts either `placeId` or `placeUrl` as query.
   app.get('/api/places/reviews', async (req, res) => {
     try {
