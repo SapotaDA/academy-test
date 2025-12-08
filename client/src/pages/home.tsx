@@ -182,30 +182,96 @@ export default function HomePage() {
 
       <section id="grounds" className="py-16 md:py-20">
         <div className="mx-auto max-w-7xl px-4 md:px-6 lg:px-8">
-          <FadeIn className="mb-12 flex flex-wrap items-end justify-between gap-4">
-            <div>
-              <h2 className="text-3xl font-semibold md:text-4xl">Featured Grounds</h2>
-              <p className="mt-2 text-muted-foreground">
-                Explore our top-rated cricket facilities
-              </p>
-            </div>
-            <Link href="/booking">
-              <motion.div whileHover={{ x: 5 }}>
-                <Button variant="outline" className="gap-2" data-testid="button-view-all-grounds">
-                  View All Grounds <ChevronRight className="h-4 w-4" />
-                </Button>
-              </motion.div>
-            </Link>
+          <FadeIn className="mb-12 text-center">
+            <h2 className="text-3xl font-semibold md:text-4xl">Featured Grounds</h2>
+            <p className="mt-2 text-muted-foreground">
+              Book your perfect cricket venue with flexible options
+            </p>
           </FadeIn>
           
-          <StaggerContainer className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {featuredGrounds.map(ground => (
-              <StaggerItem key={ground.id}>
-                <motion.div whileHover={{ y: -5 }} transition={{ duration: 0.2 }}>
-                  <GroundCard ground={ground} />
-                </motion.div>
-              </StaggerItem>
-            ))}
+          <StaggerContainer className="grid gap-6 md:grid-cols-2">
+            <StaggerItem>
+              <motion.div whileHover={{ y: -5 }} transition={{ duration: 0.2 }}>
+                <Card className="overflow-hidden border-2 hover:border-primary/50 transition-colors">
+                  <CardContent className="p-8 space-y-6">
+                    <div>
+                      <h3 className="text-2xl font-bold mb-2">25 Overs Each Side</h3>
+                      <p className="text-muted-foreground">Ideal for short-format matches.</p>
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <p className="text-sm text-muted-foreground">Cost</p>
+                      <p className="text-3xl font-bold text-primary">₹— to ₹7,000</p>
+                    </div>
+
+                    <div className="space-y-3 border-t pt-6">
+                      <p className="font-semibold text-sm">Add-ons</p>
+                      <ul className="space-y-2">
+                        <li className="flex items-start gap-2 text-sm">
+                          <span className="text-primary mt-1">✓</span>
+                          <span>Umpire available at additional charges</span>
+                        </li>
+                        <li className="flex items-start gap-2 text-sm">
+                          <span className="text-primary mt-1">✓</span>
+                          <span>Scorer available at additional charges</span>
+                        </li>
+                      </ul>
+                    </div>
+
+                    <Link href="/booking">
+                      <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                        <Button className="w-full gap-2" data-testid="button-book-25overs">
+                          Book Now <ArrowRight className="h-4 w-4" />
+                        </Button>
+                      </motion.div>
+                    </Link>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            </StaggerItem>
+
+            <StaggerItem>
+              <motion.div whileHover={{ y: -5 }} transition={{ duration: 0.2 }}>
+                <Card className="overflow-hidden border-2 border-primary hover:border-primary transition-colors bg-primary/5">
+                  <CardContent className="p-8 space-y-6">
+                    <div>
+                      <div className="inline-block mb-3">
+                        <span className="bg-primary text-primary-foreground px-3 py-1 rounded-full text-xs font-semibold">Most Popular</span>
+                      </div>
+                      <h3 className="text-2xl font-bold mb-2">Full Day Booking</h3>
+                      <p className="text-muted-foreground">Perfect for tournaments or full-day events.</p>
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <p className="text-sm text-muted-foreground">Cost</p>
+                      <p className="text-3xl font-bold text-primary">₹15,000</p>
+                    </div>
+
+                    <div className="space-y-3 border-t pt-6">
+                      <p className="font-semibold text-sm">Add-ons</p>
+                      <ul className="space-y-2">
+                        <li className="flex items-start gap-2 text-sm">
+                          <span className="text-primary mt-1">✓</span>
+                          <span>Umpire - Charged extra</span>
+                        </li>
+                        <li className="flex items-start gap-2 text-sm">
+                          <span className="text-primary mt-1">✓</span>
+                          <span>Scorer - Charged extra</span>
+                        </li>
+                      </ul>
+                    </div>
+
+                    <Link href="/booking">
+                      <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                        <Button className="w-full gap-2" data-testid="button-book-fullday">
+                          Book Now <ArrowRight className="h-4 w-4" />
+                        </Button>
+                      </motion.div>
+                    </Link>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            </StaggerItem>
           </StaggerContainer>
         </div>
       </section>
