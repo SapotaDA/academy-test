@@ -13,7 +13,7 @@ export async function registerRoutes(
   // e.g. storage.insertUser(user) or storage.getUserByUsername(username)
 
   // Newsletter subscription endpoint
-  app.post('/api/newsletter', (req, res) => {
+  app.post('/api/newsletter', async (req, res) => {
     try {
       const { email } = req.body;
       if (!email || typeof email !== 'string' || !email.trim()) {
@@ -23,9 +23,56 @@ export async function registerRoutes(
       if (!emailRegex.test(email.trim())) {
         return res.status(400).json({ message: 'Invalid email format' });
       }
-      // Log subscription (in a real app, persist to database)
-      console.log(`Newsletter subscription: ${email.trim()}`);
-      return res.json({ message: 'Successfully subscribed to newsletter', email: email.trim() });
+
+      const resendApiKey = process.env.RESEND_API_KEY;
+      if (!resendApiKey) {
+        console.warn('RESEND_API_KEY not configured. Subscription logged but email not sent.');
+        console.log(`Newsletter subscription: ${email.trim()}`);
+        return res.json({ message: 'Successfully subscribed to newsletter', email: email.trim() });
+      }
+
+      // Send confirmation email via Resend
+      const response = await fetch('https://api.resend.com/emails', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${resendApiKey}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          from: 'noreply@sidhacademy.com',
+          to: email.trim(),
+          subject: 'Welcome to Sidh Cricket Academy Newsletter',
+          html: `
+            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+              <h2 style="color: #1f2937;">Welcome to Sidh Cricket Academy</h2>
+              <p style="color: #4b5563; font-size: 16px;">Thank you for subscribing to our newsletter!</p>
+              <p style="color: #4b5563; font-size: 16px;">You will now receive updates on:</p>
+              <ul style="color: #4b5563; font-size: 16px;">
+                <li>New ground bookings and availability</li>
+                <li>Special offers and discounts</li>
+                <li>Training programs and events</li>
+                <li>Academy news and announcements</li>
+              </ul>
+              <p style="color: #4b5563; font-size: 16px;">Stay tuned for exciting updates!</p>
+              <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 20px 0;" />
+              <p style="color: #6b7280; font-size: 12px; text-align: center;">© 2024 Sidh Cricket Academy. All rights reserved.</p>
+              <p style="color: #6b7280; font-size: 12px; text-align: center;">
+                <a href="https://sidhacademy.com" style="color: #3b82f6; text-decoration: none;">Visit our website</a>
+              </p>
+            </div>
+          `,
+        }),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        console.error('Resend API error:', error);
+        return res.status(502).json({ message: 'Failed to send confirmation email', error });
+      }
+
+      const result = await response.json();
+      console.log(`Newsletter subscription and email sent to: ${email.trim()}`, result);
+      return res.json({ message: 'Successfully subscribed to newsletter and confirmation email sent', email: email.trim() });
     } catch (err: any) {
       return res.status(500).json({ message: err?.message || String(err) });
     }

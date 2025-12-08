@@ -1,5 +1,4 @@
 import { Link } from 'wouter';
-import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight, Calendar, Users, Shield, Clock, Star, ChevronRight, Sparkles, MapPin, Phone } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -69,31 +68,6 @@ const stats = [
 
 export default function HomePage() {
   const featuredGrounds = grounds.filter(g => g.featured).slice(0, 3);
-  const [gmReviews, setGmReviews] = useState<any[] | null>(null);
-  const [gmLoading, setGmLoading] = useState(false);
-  const [gmError, setGmError] = useState<string | null>(null);
-
-  useEffect(() => {
-    // fetch Google Maps reviews via server proxy. Using the shortened maps link provided.
-    const placeUrl = 'https://maps.app.goo.gl/4HmGFERYeWR8o35SA';
-    const fetchReviews = async () => {
-      try {
-        setGmLoading(true);
-        const resp = await fetch(`/api/places/reviews?placeUrl=${encodeURIComponent(placeUrl)}`);
-        if (!resp.ok) throw new Error(`Failed to fetch reviews: ${resp.status}`);
-        const json = await resp.json();
-        setGmReviews(Array.isArray(json.reviews) ? json.reviews : []);
-      } catch (err: any) {
-        console.error('Google Maps reviews fetch error', err);
-        setGmError(err?.message || 'Failed to load reviews');
-        setGmReviews([]);
-      } finally {
-        setGmLoading(false);
-      }
-    };
-
-    fetchReviews();
-  }, []);
 
   return (
     <div className="flex flex-col overflow-x-hidden">
@@ -345,94 +319,48 @@ export default function HomePage() {
           </FadeIn>
           
           <StaggerContainer className="grid gap-6 md:grid-cols-2">
-            {gmLoading && (
-              <StaggerItem>
-                <Card>
-                  <CardContent className="p-6 text-center">Loading reviews...</CardContent>
-                </Card>
-              </StaggerItem>
-            )}
-            {!gmLoading && gmError && (
-              <StaggerItem>
-                <Card>
-                  <CardContent className="p-6 text-center text-destructive">{gmError}</CardContent>
-                </Card>
-              </StaggerItem>
-            )}
-
-            {!gmLoading && Array.isArray(gmReviews) && gmReviews.length > 0
-              ? gmReviews.map((r, i) => (
-                  <StaggerItem key={i}>
-                    <motion.div whileHover={{ y: -3 }} transition={{ duration: 0.2 }}>
-                      <Card className="overflow-visible" data-testid={`card-review-${i}`}>
-                        <CardContent className="p-6">
-                          <div className="mb-4 flex items-center gap-3">
-                            {r.profile_photo_url ? (
-                              <img src={r.profile_photo_url} alt={r.author_name} className="h-10 w-10 rounded-full object-cover" />
-                            ) : (
-                              <Avatar>
-                                <AvatarFallback>{(r.author_name || 'U').charAt(0)}</AvatarFallback>
-                              </Avatar>
-                            )}
-                            <div>
-                              <p className="font-medium">{r.author_name}</p>
-                              <p className="text-sm text-muted-foreground">{r.relative_time_description}</p>
-                            </div>
-                          </div>
-                          <div className="mb-4 flex items-center gap-1">
-                            {Array.from({ length: r.rating || 0 }).map((_, j) => (
-                              <Star key={j} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                            ))}
-                          </div>
-                          <p className="mb-6 text-muted-foreground">"{r.text}"</p>
-                        </CardContent>
-                      </Card>
-                    </motion.div>
-                  </StaggerItem>
-                ))
-              : // fallback to internal testimonials
-                testimonials.map((testimonial) => (
-                  <StaggerItem key={testimonial.id}>
-                    <motion.div whileHover={{ y: -3 }} transition={{ duration: 0.2 }}>
-                      <Card className="overflow-visible" data-testid={`card-testimonial-${testimonial.id}`}>
-                        <CardContent className="p-6">
-                          <motion.div 
-                            className="mb-4 flex items-center gap-1"
-                            initial={{ opacity: 0 }}
-                            whileInView={{ opacity: 1 }}
-                            transition={{ staggerChildren: 0.1 }}
+            {testimonials.map((testimonial, index) => (
+              <StaggerItem key={testimonial.id}>
+                <motion.div whileHover={{ y: -3 }} transition={{ duration: 0.2 }}>
+                  <Card className="overflow-visible" data-testid={`card-testimonial-${testimonial.id}`}>
+                    <CardContent className="p-6">
+                      <motion.div 
+                        className="mb-4 flex items-center gap-1"
+                        initial={{ opacity: 0 }}
+                        whileInView={{ opacity: 1 }}
+                        transition={{ staggerChildren: 0.1 }}
+                      >
+                        {Array.from({ length: testimonial.rating }).map((_, i) => (
+                          <motion.div
+                            key={i}
+                            initial={{ opacity: 0, scale: 0 }}
+                            whileInView={{ opacity: 1, scale: 1 }}
+                            transition={{ delay: i * 0.1 }}
                           >
-                            {Array.from({ length: testimonial.rating }).map((_, i) => (
-                              <motion.div
-                                key={i}
-                                initial={{ opacity: 0, scale: 0 }}
-                                whileInView={{ opacity: 1, scale: 1 }}
-                                transition={{ delay: i * 0.1 }}
-                              >
-                                <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                              </motion.div>
-                            ))}
+                            <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
                           </motion.div>
-                          <p className="mb-6 text-muted-foreground">"{testimonial.content}"</p>
-                          <div className="flex items-center justify-between gap-4">
-                            <div className="flex items-center gap-3">
-                              <Avatar>
-                                <AvatarFallback>{testimonial.name.charAt(0)}</AvatarFallback>
-                              </Avatar>
-                              <div>
-                                <p className="font-medium">{testimonial.name}</p>
-                                <p className="text-sm text-muted-foreground">{testimonial.role}</p>
-                              </div>
-                            </div>
-                            <div className="text-right text-sm text-muted-foreground">
-                              {testimonial.bookings} bookings
-                            </div>
+                        ))}
+                      </motion.div>
+                      <p className="mb-6 text-muted-foreground">"{testimonial.content}"</p>
+                      <div className="flex items-center justify-between gap-4">
+                        <div className="flex items-center gap-3">
+                          <Avatar>
+                            <AvatarFallback>{testimonial.name.charAt(0)}</AvatarFallback>
+                          </Avatar>
+                          <div>
+                            <p className="font-medium">{testimonial.name}</p>
+                            <p className="text-sm text-muted-foreground">{testimonial.role}</p>
                           </div>
-                        </CardContent>
-                      </Card>
-                    </motion.div>
-                  </StaggerItem>
-                ))}
+                        </div>
+                        <div className="text-right text-sm text-muted-foreground">
+                          {testimonial.bookings} bookings
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              </StaggerItem>
+            ))}
           </StaggerContainer>
         </div>
       </section>
