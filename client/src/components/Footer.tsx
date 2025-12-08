@@ -1,5 +1,5 @@
 import { Link } from 'wouter';
-import { CalendarDays, Mail, Phone, MapPin } from 'lucide-react';
+import { Trophy, Mail, Phone, MapPin } from 'lucide-react';
 import { SiFacebook, SiInstagram, SiX } from 'react-icons/si';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -11,13 +11,16 @@ export default function Footer() {
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
           <div className="space-y-4">
             <Link href="/" className="flex items-center gap-2">
-              <div className="flex h-9 w-9 items-center justify-center rounded-md bg-primary">
-                <CalendarDays className="h-5 w-5 text-primary-foreground" />
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-primary to-primary/80 shadow-lg">
+                <Trophy className="h-6 w-6 text-primary-foreground" />
               </div>
-              <span className="text-xl font-bold">CricketBook</span>
+              <div className="flex flex-col">
+                <span className="text-xl font-bold">Sidh Cricket Academy</span>
+                <span className="text-xs text-muted-foreground">Premium Training & Grounds</span>
+              </div>
             </Link>
             <p className="text-sm text-muted-foreground">
-              Book premium cricket grounds for your matches. Easy online booking with flexible time slots.
+              Premier cricket academy providing world-class training facilities and ground bookings. Join 1000+ passionate cricketers in their journey to excellence.
             </p>
             <div className="flex gap-2">
               <Button size="icon" variant="ghost" data-testid="link-social-facebook">
@@ -67,7 +70,7 @@ export default function Footer() {
               </div>
               <div className="flex items-center gap-2">
                 <Mail className="h-4 w-4 shrink-0" />
-                <span>info@cricketbook.com</span>
+                <a href="mailto:info@sidhacademy.com" className="hover:text-foreground hover:underline">info@sidhacademy.com</a>
               </div>
             </div>
           </div>
@@ -90,7 +93,7 @@ export default function Footer() {
         </div>
 
         <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t pt-8 text-sm text-muted-foreground md:flex-row">
-          <p data-testid="text-copyright">2024 CricketBook. All rights reserved.</p>
+          <p data-testid="text-copyright">2024 Sidh Cricket Academy. All rights reserved.</p>
           <div className="flex flex-wrap justify-center gap-4">
             <Link href="#" className="hover:text-foreground">Privacy Policy</Link>
             <Link href="#" className="hover:text-foreground">Terms of Service</Link>

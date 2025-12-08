@@ -85,7 +85,7 @@ export default function LoginPage({ onLogin, onSignup }: LoginPageProps) {
     setIsLoading(true);
     try {
       await onSignup(data.name, data.email, data.password);
-      toast({ title: 'Account created!', description: 'Welcome to CricketBook.' });
+      toast({ title: 'Account created!', description: 'Welcome to Sidh Cricket Academy.' });
       setLocation('/');
     } catch (error) {
       toast({ title: 'Error', description: 'Failed to create account. Please try again.', variant: 'destructive' });
@@ -103,7 +103,7 @@ export default function LoginPage({ onLogin, onSignup }: LoginPageProps) {
             </div>
           </Link>
           <div>
-            <h1 className="text-2xl font-bold" data-testid="text-auth-title">Welcome to CricketBook</h1>
+            <h1 className="text-2xl font-bold" data-testid="text-auth-title">Welcome to Sidh Cricket Academy</h1>
             <p className="text-sm text-muted-foreground">Book your perfect cricket ground</p>
           </div>
         </CardHeader>

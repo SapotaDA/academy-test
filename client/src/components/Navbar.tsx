@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'wouter';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, User, LogOut, CalendarDays } from 'lucide-react';
+import { Menu, X, User, LogOut, Trophy, CalendarDays } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -37,13 +37,16 @@ export default function Navbar({ user, onLogout }: NavbarProps) {
         <div className="flex h-16 items-center justify-between gap-4">
           <Link href="/" className="flex items-center gap-2">
             <motion.div 
-              className="flex h-9 w-9 items-center justify-center rounded-md bg-primary"
+              className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-primary to-primary/80 shadow-lg"
               whileHover={{ rotate: 10, scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              <CalendarDays className="h-5 w-5 text-primary-foreground" />
+              <Trophy className="h-6 w-6 text-primary-foreground" />
             </motion.div>
-            <span className="text-xl font-bold" data-testid="text-logo">CricketBook</span>
+            <div className="flex flex-col">
+              <span className="text-lg font-bold leading-none" data-testid="text-logo">Sidh Cricket</span>
+              <span className="text-xs text-muted-foreground">Academy</span>
+            </div>
           </Link>
 
           <div className="hidden md:flex md:items-center md:gap-1">
