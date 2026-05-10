@@ -18,7 +18,7 @@
     "paths": {
       "@frontend/*": ["./frontend/src/*"],
       "@backend/*": ["./backend/*"],
-      "@shared/*": ["./backend/shared/*"]
+      "@shared/*": ["./shared/*"]
     }
   }
 }
