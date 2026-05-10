@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { MapPin, Phone, Mail, Facebook, Instagram, Twitter, Home, Calendar, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import RulesAndTermsModal from './RulesAndTermsModal';
 
 export default function Footer() {
   const [modalState, setModalState] = useState<{ isOpen: boolean; type: 'rules' | 'terms' | 'refund' }>({

@@ -97,6 +97,7 @@ export default function BookingForm({ initialGroundId, onSuccess, featuredOnly =
       groundName: ground.name,
       groundImage: ground.image,
       date: format(new Date(), 'yyyy-MM-dd'), // Use current date as default
+      bookingType: 'Full Day',
       timeSlot: 'Full Day', // Default time slot
       players: data.players,
       customerName: data.customerName,

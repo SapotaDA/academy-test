@@ -9,6 +9,7 @@ export default function BookingCardExample() {
     groundName: 'Premier Cricket Arena',
     groundImage: 'hero',
     date: '2024-12-15',
+    bookingType: 'Evening Match',
     timeSlot: '06:00 PM - 08:00 PM',
     players: 11,
     customerName: 'John Doe',
