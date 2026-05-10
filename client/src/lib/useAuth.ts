@@ -1,7 +1,5 @@
 import { useState, useEffect, createContext, useContext } from 'react';
 
-// todo: remove mock functionality - replace with real auth
-
 export interface User {
   id: string;
   name: string;
@@ -32,43 +30,65 @@ export function useAuthProvider() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Check for stored user on mount
-    const stored = localStorage.getItem('cricketUser');
-    if (stored) {
-      setUser(JSON.parse(stored));
+    // Check for stored token and user on mount
+    const token = localStorage.getItem('authToken');
+    const storedUser = localStorage.getItem('cricketUser');
+    if (token && storedUser) {
+      setUser(JSON.parse(storedUser));
     }
     setIsLoading(false);
   }, []);
 
-  const login = async (email: string, _password: string) => {
-    // Mock login - in production this would call an API
+  const login = async (email: string, password: string) => {
     setIsLoading(true);
-    await new Promise(resolve => setTimeout(resolve, 500));
-    const mockUser: User = {
-      id: '1',
-      name: email.split('@')[0],
-      email,
-    };
-    localStorage.setItem('cricketUser', JSON.stringify(mockUser));
-    setUser(mockUser);
-    setIsLoading(false);
+    try {
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || 'Login failed');
+      }
+
+      const data = await response.json();
+      localStorage.setItem('authToken', data.token);
+      localStorage.setItem('cricketUser', JSON.stringify(data.user));
+      setUser(data.user);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const signup = async (name: string, email: string, _password: string) => {
-    // Mock signup - in production this would call an API
+  const signup = async (name: string, email: string, password: string) => {
     setIsLoading(true);
-    await new Promise(resolve => setTimeout(resolve, 500));
-    const mockUser: User = {
-      id: crypto.randomUUID(),
-      name,
-      email,
-    };
-    localStorage.setItem('cricketUser', JSON.stringify(mockUser));
-    setUser(mockUser);
-    setIsLoading(false);
+    try {
+      const response = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, password }),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || 'Signup failed');
+      }
+
+      const data = await response.json();
+      localStorage.setItem('authToken', data.token);
+      localStorage.setItem('cricketUser', JSON.stringify(data.user));
+      setUser(data.user);
+    } catch (error) {
+      throw error;
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const logout = () => {
+    localStorage.removeItem('authToken');
     localStorage.removeItem('cricketUser');
     setUser(null);
   };

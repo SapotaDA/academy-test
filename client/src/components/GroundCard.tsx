@@ -31,9 +31,10 @@ const amenityIcons: Record<string, typeof Lightbulb> = {
 
 interface GroundCardProps {
   ground: Ground;
+  pricingFormat?: 'hour' | '25overs' | 'fullday';
 }
 
-export default function GroundCard({ ground }: GroundCardProps) {
+export default function GroundCard({ ground, pricingFormat = 'hour' }: GroundCardProps) {
   const imageSrc = imageMap[ground.image] || heroImage;
 
   return (
@@ -114,11 +115,9 @@ export default function GroundCard({ ground }: GroundCardProps) {
             </span>
             <span className="text-sm text-muted-foreground">/hour</span>
           </div>
-          <Link href={`/booking?ground=${ground.id}`}>
-            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-              <Button data-testid={`button-book-${ground.id}`}>Book Now</Button>
-            </motion.div>
-          </Link>
+          <div className="text-sm font-medium text-primary">
+            Click to select
+          </div>
         </div>
       </CardContent>
     </Card>

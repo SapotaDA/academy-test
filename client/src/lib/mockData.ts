@@ -14,11 +14,19 @@ export interface Ground {
   popular?: boolean;
 }
 
+export interface BookingType {
+  id: string;
+  name: string;
+  price: number;
+  duration: string;
+}
+
 export interface TimeSlot {
   id: string;
   time: string;
-  period: 'morning' | 'afternoon' | 'evening';
+  period: 'morning' | 'afternoon' | 'evening' | 'night';
   available: boolean;
+  price: number;
 }
 
 export interface Booking {
@@ -27,6 +35,7 @@ export interface Booking {
   groundName: string;
   groundImage: string;
   date: string;
+  bookingType: string;
   timeSlot: string;
   players: number;
   customerName: string;
@@ -44,7 +53,7 @@ export const grounds: Ground[] = [
     image: 'hero',
     rating: 4.9,
     reviewCount: 128,
-    pricePerHour: 2500,
+    pricePerHour: 7000,
     capacity: 22,
     amenities: ['Floodlights', 'Parking', 'Changing Rooms', 'Cafe', 'Scoreboard'],
     featured: true,
@@ -68,7 +77,7 @@ export const grounds: Ground[] = [
     image: 'premium',
     rating: 4.8,
     reviewCount: 156,
-    pricePerHour: 3000,
+    pricePerHour: 15000,
     capacity: 22,
     amenities: ['Floodlights', 'Parking', 'Changing Rooms', 'Cafe', 'Scoreboard', 'VIP Lounge'],
     featured: true,
@@ -110,15 +119,26 @@ export const grounds: Ground[] = [
   },
 ];
 
+export const bookingTypes: BookingType[] = [
+  {
+    id: '25-overs',
+    name: '25 Overs (Each Side)',
+    price: 7000,
+    duration: '4 hours',
+  },
+  {
+    id: 'full-day',
+    name: 'Full Day Booking',
+    price: 15000,
+    duration: '12 hours',
+  },
+];
+
 export const timeSlots: TimeSlot[] = [
-  { id: '1', time: '06:00 AM - 08:00 AM', period: 'morning', available: true },
-  { id: '2', time: '08:00 AM - 10:00 AM', period: 'morning', available: true },
-  { id: '3', time: '10:00 AM - 12:00 PM', period: 'morning', available: false },
-  { id: '4', time: '12:00 PM - 02:00 PM', period: 'afternoon', available: true },
-  { id: '5', time: '02:00 PM - 04:00 PM', period: 'afternoon', available: true },
-  { id: '6', time: '04:00 PM - 06:00 PM', period: 'afternoon', available: false },
-  { id: '7', time: '06:00 PM - 08:00 PM', period: 'evening', available: true },
-  { id: '8', time: '08:00 PM - 10:00 PM', period: 'evening', available: true },
+  { id: '1', time: '7 AM - 11 AM', period: 'morning', available: true, price: 7000 },
+  { id: '2', time: '12 PM - 4 PM', period: 'afternoon', available: true, price: 7000 },
+  { id: '3', time: '4 PM - 8 PM', period: 'evening', available: false, price: 7000 },
+  { id: '4', time: '8 PM - 11 PM', period: 'night', available: true, price: 7000 },
 ];
 
 export const pricingTiers = [
@@ -198,8 +218,15 @@ export function saveBooking(booking: Omit<Booking, 'id' | 'createdAt'>): Booking
 // Helper function to cancel booking
 export function cancelBooking(bookingId: string): void {
   const bookings = getBookings();
-  const updated = bookings.map(b => 
+  const updated = bookings.map(b =>
     b.id === bookingId ? { ...b, status: 'cancelled' as const } : b
   );
+  localStorage.setItem('cricketBookings', JSON.stringify(updated));
+}
+
+// Helper function to delete booking completely
+export function deleteBooking(bookingId: string): void {
+  const bookings = getBookings();
+  const updated = bookings.filter(b => b.id !== bookingId);
   localStorage.setItem('cricketBookings', JSON.stringify(updated));
 }
