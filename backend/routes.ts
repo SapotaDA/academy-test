@@ -3,7 +3,7 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import { loginUserSchema, registerUserSchema } from "@shared/schema";
+import { loginUserSchema, registerUserSchema, type InsertBooking, type InsertUser } from "@shared/schema";
 import { registerAdminRoutes } from "./admin";
 
 export async function registerRoutes(
@@ -19,7 +19,7 @@ export async function registerRoutes(
   // Auth routes
   app.post('/api/auth/register', express.json(), async (req, res) => {
     try {
-      const { name, email, password } = req.body;
+      const { name, email, password, role } = req.body;
       const validation = registerUserSchema.safeParse({ name, email, password });
       if (!validation.success) {
         return res.status(400).json({ message: 'Invalid input', errors: validation.error.issues });
@@ -31,15 +31,15 @@ export async function registerRoutes(
       }
 
       const hashedPassword = await bcrypt.hash(password, 10);
-      const user = await storage.createUser({ name, email, password: hashedPassword });
+      const user = await storage.createUser({ name, email, password: hashedPassword, role: role || 'user' });
 
       const token = jwt.sign(
-        { id: user.id, email: user.email },
+        { id: user.id, email: user.email, role: user.role },
         process.env.JWT_SECRET || 'fallback-secret',
         { expiresIn: '7d' }
       );
 
-      return res.json({ message: 'User created successfully', user: { id: user.id, name: user.name, email: user.email }, token });
+      return res.json({ message: 'User created successfully', user: { id: user.id, name: user.name, email: user.email, role: user.role }, token });
     } catch (err: any) {
       return res.status(500).json({ message: err?.message || String(err) });
     }
@@ -47,7 +47,7 @@ export async function registerRoutes(
 
   app.post('/api/auth/login', express.json(), async (req, res) => {
     try {
-      const { email, password } = req.body;
+      const { email, password, role: requestedRole } = req.body;
       const validation = loginUserSchema.safeParse({ email, password });
       if (!validation.success) {
         return res.status(400).json({ message: 'Invalid input', errors: validation.error.issues });
@@ -63,13 +63,18 @@ export async function registerRoutes(
         return res.status(401).json({ message: 'Invalid credentials' });
       }
 
+      // For demo purposes, allow overriding the role during login
+      if (requestedRole) {
+        user.role = requestedRole as any;
+      }
+
       const token = jwt.sign(
-        { id: user.id, email: user.email },
+        { id: user.id, email: user.email, role: user.role },
         process.env.JWT_SECRET || 'fallback-secret',
         { expiresIn: '7d' }
       );
 
-      return res.json({ message: 'Login successful', user: { id: user.id, name: user.name, email: user.email }, token });
+      return res.json({ message: 'Login successful', user: { id: user.id, name: user.name, email: user.email, role: user.role }, token });
     } catch (err: any) {
       return res.status(500).json({ message: err?.message || String(err) });
     }
@@ -262,7 +267,7 @@ export async function registerRoutes(
           status = 'booked';
         } else if (timeSlotsBooked.length >= 16) { // All time slots booked (16 slots from 7 AM to 10 PM)
           status = 'booked';
-        } else if (Math.random() < 0.1) { // 10% chance of being unavailable for maintenance
+        } else if (false) { // Placeholder for maintenance logic
           status = 'unavailable';
         }
 
@@ -280,6 +285,7 @@ export async function registerRoutes(
 
       return res.json(availability);
     } catch (err: any) {
+      console.error('Availability API error:', err);
       return res.status(500).json({ message: err?.message || String(err) });
     }
   });

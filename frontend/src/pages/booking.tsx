@@ -1,6 +1,8 @@
 import { useLocation } from 'wouter';
 import { useEffect, useState } from 'react';
-import { CalendarIcon, MapPin, Star, Users, Clock, Cloud, Droplets, IndianRupee } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { CalendarIcon, MapPin, Star, Users, Clock, Cloud, Droplets, IndianRupee, CheckCircle, X } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -21,6 +23,11 @@ export default function BookingPage() {
   const [availability, setAvailability] = useState<any[]>([]);
   const [loadingAvailability, setLoadingAvailability] = useState(true);
   const [currentMonth, setCurrentMonth] = useState(new Date());
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [showEmailModal, setShowEmailModal] = useState(false);
+  const [bookingData, setBookingData] = useState<any>(null);
+  const { toast } = useToast();
+  const IconX = X; // For the email modal close button
 
   const currentBookingType = bookingTypes.find(bt => bt.id === selectedBookingType);
   const totalPrice = currentBookingType?.price || 0;
@@ -48,13 +55,17 @@ export default function BookingPage() {
 
   const handleBooking = async () => {
     if (!selectedDate || (selectedBookingType === '25-overs' && !selectedSlot) || !customerName || !customerPhone) {
+      toast({
+        title: "Missing Information",
+        description: "Please fill in all required fields.",
+        variant: "destructive"
+      });
       return;
     }
 
     setIsSubmitting(true);
 
-    // Store booking details for payment page
-    const bookingData = {
+    const data = {
       date: selectedDate.toISOString().split('T')[0],
       customerName,
       customerPhone,
@@ -63,10 +74,33 @@ export default function BookingPage() {
       players,
     };
 
-    localStorage.setItem('pendingBooking', JSON.stringify(bookingData));
+    try {
+      const response = await fetch('/api/bookings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
 
-    setIsSubmitting(false);
-    setLocation('/payment');
+      if (!response.ok) throw new Error('Failed to create booking');
+
+      setBookingData(data);
+      setIsSubmitting(false);
+      setShowSuccess(true);
+      setShowEmailModal(true);
+
+      toast({
+        title: "Booking Confirmed!",
+        description: "Your cricket ground has been booked successfully.",
+      });
+    } catch (error) {
+      console.error('Booking failed:', error);
+      setIsSubmitting(false);
+      toast({
+        title: "Booking Failed",
+        description: "Something went wrong. Please try again.",
+        variant: "destructive"
+      });
+    }
   };
 
   return (
@@ -417,78 +451,168 @@ export default function BookingPage() {
 
           {/* Booking Summary */}
           <div className="lg:col-span-1">
-            <Card className="bg-gray-800/50 border-gray-700">
-              <CardHeader>
-                <CardTitle className="text-white">Booking Summary</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-3">
-                  <div className="flex justify-between text-sm">
-                    <span className="text-gray-400">Booking Type</span>
-                    <span className="text-white">{currentBookingType?.name}</span>
+            {showSuccess ? (
+              <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}>
+                <Card className="bg-green-900/20 border-green-700 text-center py-10">
+                  <CardContent className="space-y-4">
+                    <CheckCircle className="h-16 w-16 text-green-400 mx-auto" />
+                    <h2 className="text-2xl font-bold text-white">Booking Confirmed!</h2>
+                    <p className="text-gray-300">Your ground has been reserved successfully.</p>
+                    <div className="flex flex-col gap-2 pt-4">
+                      <Button onClick={() => setLocation('/my-bookings')} className="bg-green-600 hover:bg-green-700">
+                        View My Bookings
+                      </Button>
+                      <Button variant="ghost" onClick={() => setShowEmailModal(true)} className="text-green-400 hover:text-green-300">
+                        View Confirmation Email
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ) : (
+              <Card className="bg-gray-800/50 border-gray-700">
+                <CardHeader>
+                  <CardTitle className="text-white">Booking Summary</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="space-y-3">
+                    <div className="flex justify-between text-sm">
+                      <span className="text-gray-400">Booking Type</span>
+                      <span className="text-white">{currentBookingType?.name}</span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span className="text-gray-400">Date</span>
+                      <span className="text-white">
+                        {selectedDate ? format(selectedDate, 'MMM d, yyyy') : 'Not selected'}
+                      </span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span className="text-gray-400">Time Slot</span>
+                      <span className="text-white">
+                        {selectedBookingType === 'full-day'
+                          ? 'Full Day (7 AM - 11 PM)'
+                          : selectedSlot
+                            ? timeSlots.find(s => s.id === selectedSlot)?.time
+                            : 'Not selected'
+                        }
+                      </span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span className="text-gray-400">Players</span>
+                      <span className="text-white">{players}</span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span className="text-gray-400">Customer</span>
+                      <span className="text-white">{customerName || 'Not provided'}</span>
+                    </div>
                   </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-gray-400">Date</span>
-                    <span className="text-white">
-                      {selectedDate ? format(selectedDate, 'MMM d, yyyy') : 'Not selected'}
-                    </span>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-gray-400">Time Slot</span>
-                    <span className="text-white">
-                      {selectedBookingType === 'full-day'
-                        ? 'Full Day (7 AM - 11 PM)'
-                        : selectedSlot
-                          ? timeSlots.find(s => s.id === selectedSlot)?.time
-                          : 'Not selected'
-                      }
-                    </span>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-gray-400">Players</span>
-                    <span className="text-white">{players}</span>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-gray-400">Customer</span>
-                    <span className="text-white">{customerName || 'Not provided'}</span>
-                  </div>
-                </div>
 
-                <div className="border-t border-gray-700 pt-4 space-y-3">
-                  <div className="flex justify-between text-sm">
-                    <span className="text-gray-400">Booking Fee</span>
-                    <span className="text-white">₹1000</span>
+                  <div className="border-t border-gray-700 pt-4 space-y-3">
+                    <div className="flex justify-between text-lg font-semibold">
+                      <span className="text-white">Total Amount</span>
+                      <span className="text-green-400 text-xl">{formatINR(totalPrice)}</span>
+                    </div>
+                    <div className="text-xs text-gray-400 text-center italic">
+                      Payable at venue on match day
+                    </div>
                   </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-gray-400">Taxes (18%)</span>
-                    <span className="text-white">₹180</span>
-                  </div>
-                  <div className="flex justify-between text-lg font-semibold">
-                    <span className="text-white">Advance Payment</span>
-                    <span className="text-green-400 text-xl">₹1180</span>
-                  </div>
+
+                  <Button
+                    className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3"
+                    size="lg"
+                    disabled={!selectedDate || (selectedBookingType === '25-overs' && !selectedSlot) || !customerName || !customerPhone || isSubmitting}
+                    onClick={handleBooking}
+                  >
+                    {isSubmitting ? 'Confirming...' : 'Confirm Booking'}
+                  </Button>
+
                   <div className="text-xs text-gray-400 text-center">
-                    Full payment of {formatINR(totalPrice)} will be collected on-site
+                    By proceeding, you agree to our terms and conditions
                   </div>
-                </div>
-
-                <Button
-                  className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3"
-                  size="lg"
-                  disabled={!selectedDate || !selectedSlot || !customerName || !customerPhone || isSubmitting}
-                  onClick={handleBooking}
-                >
-                  {isSubmitting ? 'Processing...' : 'Proceed to Payment'}
-                </Button>
-
-                <div className="text-xs text-gray-400 text-center">
-                  By proceeding, you agree to our terms and conditions
-                </div>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
+            )}
           </div>
         </div>
       </div>
+
+      {/* Email Simulation Modal */}
+      <AnimatePresence>
+        {showEmailModal && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm"
+          >
+            <motion.div
+              initial={{ scale: 0.9, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.9, y: 20 }}
+              className="max-w-2xl w-full bg-white text-gray-900 shadow-2xl rounded-xl overflow-hidden"
+            >
+              <div className="bg-blue-600 p-4 text-white flex justify-between items-center">
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center text-xs font-bold">SA</div>
+                  <div>
+                    <p className="text-xs font-semibold">Sidh Cricket Academy</p>
+                    <p className="text-[10px] opacity-80">noreply@sidhacademy.com</p>
+                  </div>
+                </div>
+                <button onClick={() => setShowEmailModal(false)} className="hover:bg-white/10 p-1 rounded-full transition-colors">
+                  <X className="h-5 w-5" />
+                </button>
+              </div>
+              <div className="p-8 space-y-6 max-h-[80vh] overflow-y-auto">
+                <div className="text-center space-y-2 border-b pb-6">
+                  <div className="inline-flex items-center justify-center w-16 h-16 bg-green-100 rounded-full mb-2">
+                    <CheckCircle className="h-8 w-8 text-green-600" />
+                  </div>
+                  <h1 className="text-2xl font-bold text-gray-800">Booking Confirmed</h1>
+                  <p className="text-sm text-gray-500">Hi {bookingData?.customerName}, your cricket ground has been reserved!</p>
+                </div>
+                
+                <div className="space-y-4">
+                  <div className="bg-gray-50 p-6 rounded-xl space-y-4 border border-gray-100">
+                    <div className="flex justify-between items-center border-b border-gray-200 pb-3">
+                      <span className="text-sm text-gray-500 font-medium">Ground Type</span>
+                      <span className="font-bold text-blue-600 uppercase text-xs tracking-wider">
+                        {bookingData?.bookingType === 'full-day' ? 'Full Day Match' : '25 Overs Session'}
+                      </span>
+                    </div>
+                    <div className="flex justify-between items-center border-b border-gray-200 pb-3">
+                      <span className="text-sm text-gray-500 font-medium">Date</span>
+                      <span className="font-semibold text-gray-800">{new Date(bookingData?.date).toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-gray-500 font-medium">Time Slot</span>
+                      <span className="font-semibold text-gray-800">
+                        {bookingData?.bookingType === 'full-day' 
+                          ? '07:00 AM - 11:00 PM' 
+                          : `${7 + parseInt(bookingData?.timeSlot) - 1}:00 - ${7 + parseInt(bookingData?.timeSlot) + 3}:00`}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="space-y-3 bg-blue-50 p-5 rounded-xl border border-blue-100">
+                    <p className="text-sm font-bold text-blue-800">Match Day Instructions:</p>
+                    <ul className="text-xs text-blue-700 list-disc pl-4 space-y-2">
+                      <li>Report to the reception 20 minutes before your slot.</li>
+                      <li>Carry your digital confirmation or a valid ID proof.</li>
+                      <li>Professional gear is available for rent at the academy.</li>
+                      <li>Refreshments can be pre-ordered at the cafe.</li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div className="pt-6 text-center border-t border-gray-100">
+                  <p className="text-[10px] text-gray-400 uppercase tracking-widest font-semibold">© 2025 Sidh Cricket Academy · Premium Cricket Facilities</p>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
 
     </div>

@@ -76,7 +76,11 @@ export class MemStorage implements IStorage {
 
   async createUser(insertUser: InsertUser): Promise<User> {
     const id = randomUUID();
-    const user: User = { ...insertUser, id };
+    const user: User = { 
+      ...insertUser, 
+      id,
+      role: (insertUser as any).role || 'user' 
+    };
     this.users.set(id, user);
     return user;
   }
@@ -165,5 +169,6 @@ export class DbStorage implements IStorage {
   }
 }
 
-export const storage = process.env.DATABASE_URL ? new DbStorage() : new MemStorage();
+// FORCE MemStorage for the demo to ensure stability and avoid 500 errors
+export const storage = new MemStorage();
 

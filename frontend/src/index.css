@@ -418,3 +418,14 @@
     inset: -1px;
   }
 }
+
+/* Hide Replit and other floating badges for a cleaner demo */
+iframe[src*="replit"], 
+[class*="replit"], 
+#replit-badge-root,
+.replit-badge {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}

@@ -29,6 +29,10 @@ export default function Navbar({ user, onLogout }: NavbarProps) {
     { href: '/my-bookings', label: 'My Bookings' },
   ];
 
+  if (user?.role === 'admin') {
+    navLinks.push({ href: '/admin', label: 'Dashboard' });
+  }
+
   const isActive = (href: string) => location === href;
 
   return (

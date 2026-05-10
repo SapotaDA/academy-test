@@ -49,6 +49,7 @@ export default function LoginPage({ onLogin, onSignup }: LoginPageProps) {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [activeTab, setActiveTab] = useState('login');
+  const [isAdminMode, setIsAdminMode] = useState(false);
 
   const loginForm = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -72,9 +73,19 @@ export default function LoginPage({ onLogin, onSignup }: LoginPageProps) {
   const handleLogin = async (data: LoginFormValues) => {
     setIsLoading(true);
     try {
-      await onLogin(data.email, data.password);
-      toast({ title: 'Welcome back!', description: 'You have been logged in successfully.' });
-      setLocation('/');
+      await onLogin(data.email, data.password, isAdminMode ? 'admin' : 'user');
+      
+      // Get the updated user from localStorage to check role
+      const storedUser = localStorage.getItem('cricketUser');
+      const user = storedUser ? JSON.parse(storedUser) : null;
+      
+      toast({ title: 'Welcome back!', description: `Logged in as ${user?.role === 'admin' ? 'Administrator' : user?.name}` });
+      
+      if (user?.role === 'admin') {
+        setLocation('/admin');
+      } else {
+        setLocation('/');
+      }
     } catch (error) {
       toast({ title: 'Error', description: 'Invalid credentials. Please try again.', variant: 'destructive' });
     }
@@ -108,13 +119,17 @@ export default function LoginPage({ onLogin, onSignup }: LoginPageProps) {
           </div>
         </CardHeader>
         <CardContent>
-          <Tabs value={activeTab} onValueChange={setActiveTab}>
-            <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="login" data-testid="tab-login">Login</TabsTrigger>
-              <TabsTrigger value="signup" data-testid="tab-signup">Sign Up</TabsTrigger>
+          <Tabs value={activeTab} onValueChange={(v) => {
+            setActiveTab(v);
+            setIsAdminMode(v === 'admin');
+          }}>
+            <TabsList className="grid w-full grid-cols-3">
+              <TabsTrigger value="login">User Login</TabsTrigger>
+              <TabsTrigger value="admin">Admin Login</TabsTrigger>
+              <TabsTrigger value="signup">Sign Up</TabsTrigger>
             </TabsList>
 
-            <TabsContent value="login" className="mt-6">
+            <TabsContent value={activeTab === 'admin' ? 'login' : activeTab} className="mt-6">
               <Form {...loginForm}>
                 <form onSubmit={loginForm.handleSubmit(handleLogin)} className="space-y-4">
                   <FormField

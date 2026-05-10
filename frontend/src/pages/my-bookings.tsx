@@ -132,7 +132,9 @@ export default function MyBookingsPage() {
             // Derive display values from booking data
             const groundName = booking.bookingType === 'full-day' ? 'Full Day Cricket Ground' : '25 Overs Cricket Ground';
             const location = 'Sidh Cricket Academy, Gurgaon';
-            const timeSlot = booking.timeSlot ? `${booking.timeSlot}:00 - ${(parseInt(booking.timeSlot) + 2).toString().padStart(2, '0')}:00` : 'Full Day (9:00 AM - 6:00 PM)';
+            const timeSlot = booking.timeSlot 
+              ? `${(7 + parseInt(booking.timeSlot) - 1).toString().padStart(2, '0')}:00 - ${(7 + parseInt(booking.timeSlot) + 3).toString().padStart(2, '0')}:00` 
+              : 'Full Day (07:00 AM - 11:00 PM)';
             const price = booking.bookingType === 'full-day' ? booking.players * 150 : booking.players * 50;
 
             return (

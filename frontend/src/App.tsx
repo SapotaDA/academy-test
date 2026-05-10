@@ -10,6 +10,7 @@ import HomePage from "@/pages/home";
 import BookingPage from "@/pages/booking";
 import LoginPage from "@/pages/login";
 import MyBookingsPage from "@/pages/my-bookings";
+import AdminDashboard from "@/pages/admin";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -27,6 +28,7 @@ function Router() {
               <LoginPage onLogin={auth.login} onSignup={auth.signup} />
             </Route>
             <Route path="/my-bookings" component={MyBookingsPage} />
+            <Route path="/admin" component={AdminDashboard} />
             <Route component={NotFound} />
           </Switch>
         </main>
