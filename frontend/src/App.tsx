@@ -17,9 +17,9 @@ function Router() {
 
   return (
     <AuthContext.Provider value={auth}>
-      <div className="flex min-h-screen flex-col">
+      <div className="flex min-h-screen w-full flex-col">
         <Navbar user={auth.user} onLogout={auth.logout} />
-        <main className="flex-1">
+        <main className="flex-1 w-full">
           <Switch>
             <Route path="/" component={HomePage} />
             <Route path="/booking" component={BookingPage} />

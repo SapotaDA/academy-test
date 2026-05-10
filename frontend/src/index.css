@@ -173,6 +173,80 @@
   body {
     @apply font-sans antialiased bg-background text-foreground;
   }
+  
+  /* Ensure proper flex layouts */
+  .flex {
+    display: flex;
+  }
+  
+  .flex-col {
+    flex-direction: column;
+  }
+  
+  .flex-row {
+    flex-direction: row;
+  }
+  
+  /* Ensure responsive utilities work properly */
+  .hidden {
+    display: none;
+  }
+  
+  .md\:flex {
+    display: flex;
+  }
+  
+  @media (min-width: 768px) {
+    .md\:flex {
+      display: flex !important;
+    }
+    
+    .md\:hidden {
+      display: none !important;
+    }
+  }
+  
+  @media (max-width: 767px) {
+    .md\:flex {
+      display: none !important;
+    }
+  }
+  
+  /* Fix container widths */
+  .container, .max-w-7xl {
+    width: 100%;
+    max-width: 100%;
+  }
+  
+  @media (min-width: 640px) {
+    .container, .max-w-7xl {
+      max-width: 640px;
+    }
+  }
+  
+  @media (min-width: 768px) {
+    .container, .max-w-7xl {
+      max-width: 768px;
+    }
+  }
+  
+  @media (min-width: 1024px) {
+    .container, .max-w-7xl {
+      max-width: 1024px;
+    }
+  }
+  
+  @media (min-width: 1280px) {
+    .container, .max-w-7xl {
+      max-width: 1280px;
+    }
+  }
+  
+  @media (min-width: 1536px) {
+    .container, .max-w-7xl {
+      max-width: 1536px;
+    }
+  }
 }
 
 /**

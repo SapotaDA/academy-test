@@ -49,7 +49,7 @@ export default function Navbar({ user, onLogout }: NavbarProps) {
             </div>
           </Link>
 
-          <div className="hidden md:flex md:items-center md:gap-1">
+          <div className="hidden md:flex md:flex-row md:items-center md:gap-1">
             {navLinks.map(link => (
               <Link key={link.href} href={link.href}>
                 <Button

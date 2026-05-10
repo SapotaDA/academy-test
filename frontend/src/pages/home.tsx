@@ -70,8 +70,8 @@ export default function HomePage() {
   const featuredGrounds = grounds.filter(g => g.featured).slice(0, 3);
 
   return (
-    <div className="flex flex-col overflow-x-hidden">
-      <section className="relative min-h-[600px] lg:min-h-[700px]">
+    <div className="flex flex-col w-full overflow-x-hidden">
+      <section className="relative w-full min-h-[600px] lg:min-h-[700px]">
         <div className="absolute inset-0">
           <motion.img
             initial={{ scale: 1.1 }}
