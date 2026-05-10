@@ -17,6 +17,7 @@ A modern, full-stack web application for booking cricket grounds and sports faci
 - **Authentication System**: Secure user authentication and session management
 - **Real-time Updates**: Live booking status and availability updates
 - **Form Validation**: Comprehensive client and server-side validation
+- **Separated Architecture**: Independent frontend and backend for better scalability
 
 ## 🛠️ Technology Stack
 
@@ -25,8 +26,9 @@ A modern, full-stack web application for booking cricket grounds and sports faci
 - **TypeScript** - Type-safe JavaScript for better development experience
 - **Tailwind CSS** - Utility-first CSS framework for rapid styling
 - **React Query** - Powerful data synchronization for React
-- **React Router** - Declarative routing for React applications
+- **Wouter** - Lightweight React router
 - **Framer Motion** - Production-ready motion library for React
+- **Vite** - Fast build tool and development server
 
 ### Backend
 - **Express.js** - Fast, unopinionated web framework for Node.js
@@ -34,11 +36,12 @@ A modern, full-stack web application for booking cricket grounds and sports faci
 - **PostgreSQL** - Advanced open-source relational database
 - **Drizzle ORM** - TypeScript-first ORM for SQL databases
 - **Passport.js** - Simple, unobtrusive authentication for Node.js
+- **JWT** - JSON Web Tokens for secure authentication
 
 ### Development Tools
 - **Vite** - Fast build tool and development server
 - **ESLint** - Pluggable linting utility for JavaScript and TypeScript
-- **Prettier** - Opinionated code formatter
+- **Concurrently** - Run multiple npm scripts simultaneously
 
 ## 📋 Prerequisites
 
@@ -56,25 +59,37 @@ Before running this application, make sure you have the following installed:
    cd academy-test-main
    ```
 
-2. **Install dependencies**
+2. **Install all dependencies**
    ```bash
-   npm install
+   npm run install:all
    ```
+   This will install dependencies for the root, frontend, and backend folders.
 
 3. **Database Setup**
    - Create a PostgreSQL database
-   - Copy `.env.production.example` to `.env` and configure your database credentials
+   - Copy `backend/.env.example` to `backend/.env` and configure your database credentials:
+     ```bash
+     DATABASE_URL=postgresql://username:password@localhost:5432/cricket_booking
+     JWT_SECRET=your-jwt-secret-key
+     NODE_ENV=development
+     PORT=5000
+     ```
    - Run database migrations:
      ```bash
      npm run db:push
      ```
 
-4. **Start the development server**
+4. **Start the development servers**
    ```bash
    npm run dev
    ```
+   This will start both frontend (port 3000) and backend (port 5000) simultaneously.
 
-5. **Build for production**
+5. **Individual Development**
+   - Frontend only: `npm run dev:frontend`
+   - Backend only: `npm run dev:backend`
+
+6. **Build for production**
    ```bash
    npm run build
    npm start
@@ -89,28 +104,46 @@ Before running this application, make sure you have the following installed:
 4. **Account Management**: Register/login to access personalized features
 
 ### For Developers
-- **Development Mode**: `npm run dev` starts both frontend and backend in development mode
+- **Development Mode**: `npm run dev` starts both frontend and backend concurrently
 - **Production Build**: `npm run build` creates optimized production bundles
 - **Database Management**: Use `npm run db:push` to sync database schema
+- **Linting**: `npm run lint` to check for TypeScript errors
 
 ## 🏗️ Project Structure
 
 ```
 academy-test-main/
-├── client/                 # React frontend application
+├── frontend/               # React frontend application
 │   ├── src/
 │   │   ├── components/     # Reusable UI components
+│   │   │   ├── ui/         # Base UI components (buttons, cards, etc.)
+│   │   │   └── ...         # Feature-specific components
 │   │   ├── pages/          # Page components
 │   │   ├── lib/            # Utility functions and configurations
-│   │   └── hooks/          # Custom React hooks
-├── server/                 # Express.js backend application
+│   │   ├── hooks/          # Custom React hooks
+│   │   └── main.tsx        # App entry point
+│   ├── public/             # Static assets
+│   ├── index.html          # HTML template
+│   ├── package.json        # Frontend dependencies
+│   ├── tailwind.config.js  # Tailwind CSS configuration
+│   └── vite.config.ts      # Vite build configuration
+├── backend/                # Express.js backend application
+│   ├── shared/             # Shared types and schemas
+│   │   └── schema.ts        # Database schema definitions
 │   ├── routes.ts           # API route definitions
 │   ├── storage.ts          # Database operations
-│   └── index.ts            # Server entry point
-├── shared/                 # Shared types and schemas
-│   └── schema.ts           # Database schema definitions
+│   ├── index.ts            # Server entry point
+│   ├── admin.ts            # Admin functionality
+│   ├── static.ts           # Static file serving
+│   ├── vite.ts             # Vite development server integration
+│   ├── package.json        # Backend dependencies
+│   ├── drizzle.config.ts   # Database configuration
+│   └── tsconfig.json       # TypeScript configuration
 ├── script/                 # Build and utility scripts
-└── attached_assets/        # Static assets and images
+│   └── build.ts            # Production build script
+├── docs/                   # Documentation files
+├── package.json            # Root package.json with orchestrator scripts
+└── README.md               # This file
 ```
 
 ## 🔧 API Endpoints
@@ -128,6 +161,40 @@ academy-test-main/
 - `POST /api/auth/login` - User login
 - `POST /api/auth/register` - User registration
 - `POST /api/auth/logout` - User logout
+
+### Availability
+- `GET /api/availability` - Get ground availability for specific dates
+
+## 🎨 Frontend Features
+
+- **Responsive Design**: Works seamlessly on desktop, tablet, and mobile
+- **Dark/Light Theme**: Toggle between themes
+- **Interactive Components**: Smooth animations and transitions
+- **Real-time Updates**: Live booking status updates
+- **Modern UI**: Clean, professional interface with Tailwind CSS
+
+## 🗄️ Database Schema
+
+The application uses PostgreSQL with the following main entities:
+- **Users**: User authentication and profiles
+- **Grounds**: Cricket ground information and facilities
+- **Bookings**: Booking records and status
+- **Time Slots**: Available booking time slots
+
+## 🚀 Deployment
+
+### Frontend Deployment
+The frontend builds to static files that can be deployed to any static hosting service.
+
+### Backend Deployment
+The backend can be deployed as a Node.js application with PostgreSQL database.
+
+### Environment Variables
+Required environment variables for production:
+- `DATABASE_URL`: PostgreSQL connection string
+- `JWT_SECRET`: Secret for JWT token signing
+- `NODE_ENV`: Set to 'production'
+- `PORT`: Server port (default: 5000)
 
 ## 🤝 Contributing
 
