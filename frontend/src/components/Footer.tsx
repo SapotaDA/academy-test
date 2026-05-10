@@ -20,7 +20,7 @@ export default function Footer() {
   return (
     <footer className="bg-black border-t border-gray-800">
       <div className="max-w-7xl mx-auto px-4 py-12">
-        <div className="grid md:grid-cols-3 gap-8">
+        <div className="grid md:grid-cols-4 gap-8">
           {/* Quick Links */}
           <div className="space-y-4">
             <h4 className="text-lg font-semibold text-white">Quick Links</h4>
@@ -53,9 +53,9 @@ export default function Footer() {
           </div>
 
           {/* Contact Info */}
-          <div className="space-y-2">
+          <div className="space-y-4">
             <h4 className="text-lg font-semibold text-white">Contact Us</h4>
-            <div className="space-y-2">
+            <div className="space-y-3">
               <div className="flex items-start gap-3">
                 <MapPin className="h-4 w-4 text-green-400 mt-0.5 flex-shrink-0" />
                 <div className="text-sm text-gray-400">
@@ -68,12 +68,16 @@ export default function Footer() {
                 <Phone className="h-4 w-4 text-green-400 flex-shrink-0" />
                 <span className="text-sm text-gray-400">+91 8287704299</span>
               </div>
-
+              <div className="flex items-center gap-3">
+                <Mail className="h-4 w-4 text-green-400 flex-shrink-0" />
+                <span className="text-sm text-gray-400">info@sidhcricket.com</span>
+              </div>
             </div>
           </div>
 
-          {/* Company Info */}
+          {/* Social Media */}
           <div className="space-y-4">
+            <h4 className="text-lg font-semibold text-white">Follow Us</h4>
             <div className="flex space-x-4">
               <Button variant="ghost" size="sm" className="text-gray-400 hover:text-white p-2">
                 <Facebook className="h-4 w-4" />
@@ -84,26 +88,6 @@ export default function Footer() {
               <Button variant="ghost" size="sm" className="text-gray-400 hover:text-white p-2">
                 <Twitter className="h-4 w-4" />
               </Button>
-            </div>
-          </div>
-
-          {/* Contact Info */}
-          <div className="space-y-2">
-            <h4 className="text-lg font-semibold text-white">Contact Us</h4>
-            <div className="space-y-2">
-              <div className="flex items-start gap-3">
-                <MapPin className="h-4 w-4 text-green-400 mt-0.5 flex-shrink-0" />
-                <div className="text-sm text-gray-400">
-                  <p>New National Highway, near Raisham Farm</p>
-                  <p>Parwal, Dehradun, Uttarakhand 248007</p>
-                  <p>India</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-3">
-                <Phone className="h-4 w-4 text-green-400 flex-shrink-0" />
-                <span className="text-sm text-gray-400">+91 8287704299</span>
-              </div>
-
             </div>
           </div>
 
